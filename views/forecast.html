@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>交通预报</title>
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body class="forecast">
+  <div id="mapContainer" class="forecast-map"></div>
+
+  <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=13356a0ccd8ad7d2bc0a731311acdef2&plugin=AMap.Driving"></script>
+  <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+  <script
+  src="https://code.jquery.com/jquery-1.12.4.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+  crossorigin="anonymous"></script>
+  <script>
+  // 天气状态
+  var statusWeather = {
+    '晴': './images/pre-sunny.png',
+    '多云转小雨': './images/pre-rainy.png',
+    '阵雨转晴': './images/pre-rainy.png',
+    '阵雨转多云': './images/pre-rainy.png',
+    '多云': './images/pre-cloudy.png',
+    '多云转晴': './images/pre-cloudy.png',
+    '晴转多云': './images/pre-cloudy.png'
+  };
+  //基本地图加载
+  var map = new AMap.Map("mapContainer", {
+      resizeEnable: true,
+      center: [108.926759,34.281363],//地图中心点
+      zoom: 9 //地图显示的缩放级别
+  });
+  map.plugin(['AMap.ToolBar'], function () {
+    var toolBar = new AMap.ToolBar();
+    map.addControl(toolBar);
+  });
+  // 导航策略
+  var drivingOptions = {
+    map: map,
+    policy: AMap.DrivingPolicy.LEAST_TIME,
+    hideMarkers: true,
+    showTraffic: false,
+    isOutline: false,
+    autoFitView: true
+  }
+  //构造路线导航类
+  var driving = new AMap.Driving(drivingOptions); 
+  // 根据起终点名称规划驾车导航路线
+  function route (start, end) {
+    driving.search(start, end, function (status, result) {
+      if (status === 'complete' && result.info === 'OK') {
+        drawRoute(result);
+      } else {
+        alert(result);
+      }
+    });
+  }
+  //绘制路线图及途中的关键点
+  function drawRoute (result) {
+    $.ajax({
+      type: 'get',
+      url: 'result.json',
+      dataType: "json",
+      success: function (data) {
+        if (data) {
+          data.forEach(function (item) {
+            var weather = item.weather.f.f1[0].tq.weather;
+            var lnglat = new AMap.LngLat(item.lat, item.lon);
+            var sicon = new AMap.Icon({
+              image: statusWeather[weather],
+              size:new AMap.Size(30,30),
+              imageSize:new AMap.Size(30,30)
+            });
+            var marker = new AMap.Marker({
+              icon : sicon, //复杂图标
+              visible : true, 
+              position : lnglat,
+              map:map,
+              offset:{x:-18,y:-28} //相对于基点的位置
+            });
+            AMap.event.addListener(marker,'click',function(){
+              console.log(lnglat);
+            });
+          });
+        }
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
+  }
+  var startPoint = [108.818058,34.198588];
+  var endPoint = [106.341976,32.851561];
+  route(startPoint, endPoint);
+  </script>
+</body>
+</html>
