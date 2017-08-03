@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>逐时预报</title>
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body class="predict">
+  <div class="predict-left">
+    <div class="predict-location">
+      <div class="predict-cite"><img src="./images/location.png" alt="" class="location"><span>正在定位...</span></div>
+      <div class="predict-time"><span>18:00更新</span><img src="./images/search.png" alt="" class="search"></div>
+    </div>
+    <div id="mapContainer" class="predict-map"></div>
+  </div>
+  <div class="search-panel">
+    <input type="search" placeholder="搜索城市名">
+    <ul class="search-list">
+      <li>北京</li>
+      <li>上海</li>
+      <li>深圳</li>
+      <li>广州</li>
+      <li>天津</li>
+      <li>杭州</li>
+      <li>重庆</li>
+      <li>南京</li>
+      <li>武汉</li>
+      <li>苏州</li>
+      <li>青岛</li>
+      <li>大连</li>
+      <li>成都</li>
+      <li>厦门</li>
+      <li>济南</li>
+      <li>郑州</li>
+      <li>石家庄</li>
+      <li>昆明</li>
+      <li>烟台</li>
+      <li>威海</li>
+      <li>兰州</li>
+      <li>长春</li>
+      <li>温州</li>
+      <li>太原</li>
+    </ul>
+    <div class="search-copy">
+      <img src="./images/icon-map.png" alt="">
+      <span>陕西天气</span>
+    </div>
+  </div>
+<script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/echarts/3.6.2/echarts.min.js"></script>
+<script src="http://api.map.baidu.com/api?v=2.0&ak=pXGDKqjuaEXKQQm3ZnMi0BRfoYZZBh03"></script>
+<script>
+  $(function() {
+    $('.search').on('click', function () {
+      $('.search-panel').toggleClass('search-show');
+      $('.weather-left').toggleClass('search-show');
+    });
+    var $location = $('.predict-cite span');
+    var map = new BMap.Map("mapContainer");
+    var point = new BMap.Point(116.331398,39.897445);
+    map.centerAndZoom(point,12);
+
+    var geolocation = new BMap.Geolocation();
+    geolocation.getCurrentPosition(function(r){
+      if(this.getStatus() == BMAP_STATUS_SUCCESS){
+        var myIcon = new BMap.Icon('./images/ipLocation.png', new BMap.Size(13, 14));
+        var mk = new BMap.Marker(r.point, {
+          icon: myIcon
+        });
+        map.addOverlay(mk);
+        map.panTo(r.point);
+        var geoc = new BMap.Geocoder();
+        geoc.getLocation(r.point, function (rs) {
+          $location.html(rs.address);
+        });
+      }
+      else {
+        alert('failed'+this.getStatus());
+      }        
+    },{enableHighAccuracy: true})
+  });
+</script>
+</body>
+</html>

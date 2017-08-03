@@ -5,5 +5,8 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   res.render('forecast');
 });
+router.get('/predict', function(req, res, next) {
+  res.render('predict');
+});
 
 module.exports = router;

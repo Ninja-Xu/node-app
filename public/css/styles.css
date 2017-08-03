@@ -89,12 +89,13 @@
       -ms-flex-pack: justify;
           justify-content: space-between;
 }
-.weather-search .location {
+.location {
   width: 1.1em;
   margin-right: .4em;
 }
-.weather-search .search {
+.search {
   width: 1.4em;
+  margin-left: 1em;
 }
 .weather-temp {
   padding: .37rem 0;
@@ -185,11 +186,11 @@
   padding-left: 1.2em;
 }
 .weather-detail li img {
-  width: 1.3em;
+  width: 1.5em;
   margin-right: .7em;
 }
-.weather-detail li:nth-child(4) img {
-  width: 1em;
+.weather-detail li:first-child img {
+  width: 1.1667em;
 }
 .weather-rain {
   padding: 1em 0;
@@ -745,6 +746,42 @@
   right: 0;
   height: .25em;
   background: #46dada;
+}
+.predict {
+  background: #6080e8;
+  font-size: .2rem;
+  line-height: 2;
+  padding: .5em;
+}
+.predict-location {
+  padding: 0 .8em .5em 1em;
+  color: rgba(255, 255, 255, 0.6);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.predict-location > div {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.predict-map {
+  height: 30vh;
+  min-height: 300px;
 }
 
 
