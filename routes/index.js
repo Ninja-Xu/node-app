@@ -9,4 +9,8 @@ router.get('/predict', function(req, res, next) {
   res.render('predict');
 });
 
+router.get('/weather', function(req, res, next) {
+  res.render('weather');
+});
+
 module.exports = router;
